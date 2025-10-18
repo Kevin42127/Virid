@@ -1,6 +1,3 @@
-// ===========================
-// DOM 元素
-// ===========================
 const columnsSlider = document.getElementById('columns');
 const columnsValue = document.getElementById('columns-value');
 const rowsSlider = document.getElementById('rows');
@@ -34,9 +31,6 @@ const helpButton = document.getElementById('help-button');
 const aboutDialog = document.getElementById('about-dialog');
 const closeAboutBtn = document.getElementById('close-about-btn');
 
-// ===========================
-// 狀態管理
-// ===========================
 const DEFAULT_STATE = {
     columns: 5,
     rows: 6,
@@ -57,28 +51,18 @@ let resizeStartRowSpan = 1;
 let showGridLines = true;
 let selectedItem = null;
 
-// ===========================
-// 初始化
-// ===========================
 function init() {
-    // 綁定事件監聽器
     bindEventListeners();
     
-    // 創建初始網格項目
     addGridItem(1, 1, 1, 1);
     addGridItem(2, 1, 1, 1);
     addGridItem(1, 2, 1, 1);
     
-    // 初始化滑桿填充
     initSliders();
     
-    // 初始化網格
     updateGrid();
 }
 
-// ===========================
-// 初始化滑桿填充
-// ===========================
 function initSliders() {
     updateSliderFill(columnsSlider);
     updateSliderFill(rowsSlider);
@@ -86,9 +70,6 @@ function initSliders() {
     updateSliderFill(rowGapSlider);
 }
 
-// ===========================
-// 更新滑桿填充百分比
-// ===========================
 function updateSliderFill(slider) {
     const value = slider.value;
     const min = slider.min || 0;
@@ -97,9 +78,6 @@ function updateSliderFill(slider) {
     slider.style.setProperty('--slider-value', `${percentage}%`);
 }
 
-// ===========================
-// 網格項目類別
-// ===========================
 class GridItem {
     constructor(id, colStart, rowStart, colSpan = 1, rowSpan = 1) {
         this.id = id;
@@ -118,33 +96,22 @@ class GridItem {
     }
 }
 
-// ===========================
-// 添加網格項目
-// ===========================
 function addGridItem(colStart, rowStart, colSpan = 1, rowSpan = 1) {
     const item = new GridItem(itemIdCounter++, colStart, rowStart, colSpan, rowSpan);
     gridItems.push(item);
     return item;
 }
 
-// ===========================
-// 刪除網格項目
-// ===========================
 function removeGridItem(id) {
     gridItems = gridItems.filter(item => item.id !== id);
     updateGrid();
 }
 
-// ===========================
-// 尋找空位置
-// ===========================
 function findEmptyPosition() {
     const { columns, rows } = gridState;
     
-    // 檢查每個格子是否被佔用
     for (let row = 1; row <= rows; row++) {
         for (let col = 1; col <= columns; col++) {
-            // 創建一個臨時項目來檢查這個位置
             const tempItem = {
                 id: -1,
                 colStart: col,
@@ -155,7 +122,6 @@ function findEmptyPosition() {
                 get rowEnd() { return this.rowStart + this.rowSpan; }
             };
             
-            // 檢查是否與任何現有項目重疊
             const hasOverlap = gridItems.some(item => checkOverlap(tempItem, item));
             
             if (!hasOverlap) {
@@ -164,15 +130,10 @@ function findEmptyPosition() {
         }
     }
     
-    // 如果沒有空位，返回第一個位置（可能會重疊，但至少有個位置）
     return { col: 1, row: 1 };
 }
 
-// ===========================
-// 事件監聽器綁定
-// ===========================
 function bindEventListeners() {
-    // 列數控制
     columnsSlider.addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         columnsValue.value = value;
@@ -190,7 +151,6 @@ function bindEventListeners() {
         }
     });
     
-    // 行數控制
     rowsSlider.addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         rowsValue.value = value;
@@ -208,7 +168,6 @@ function bindEventListeners() {
         }
     });
     
-    // 列間距控制
     columnGapSlider.addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         columnGapValue.value = value;
@@ -226,7 +185,6 @@ function bindEventListeners() {
         }
     });
     
-    // 行間距控制
     rowGapSlider.addEventListener('input', (e) => {
         const value = parseInt(e.target.value);
         rowGapValue.value = value;
@@ -244,30 +202,24 @@ function bindEventListeners() {
         }
     });
     
-    // 添加項目按鈕
     addItemBtn.addEventListener('click', () => {
         const pos = findEmptyPosition();
         addGridItem(pos.col, pos.row, 1, 1);
         updateGrid();
     });
     
-    // 複製按鈕
     copyHtmlBtn.addEventListener('click', () => copyToClipboard('html'));
     copyCssBtn.addEventListener('click', () => copyToClipboard('css'));
     
-    // 重置按鈕
     resetBtn.addEventListener('click', resetAll);
     
-    // 清空按鈕
     clearBtn.addEventListener('click', clearAllItems);
     
-    // 網格線開關
     showGridLinesCheckbox.addEventListener('change', (e) => {
         showGridLines = e.target.checked;
         toggleGridLines();
     });
     
-    // 模板按鈕
     templateButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const template = e.currentTarget.dataset.template;
@@ -275,38 +227,27 @@ function bindEventListeners() {
         });
     });
     
-    // 匯出按鈕
     exportBtn.addEventListener('click', exportConfiguration);
     
-    // 匯入按鈕
     importBtn.addEventListener('click', () => {
         importFileInput.click();
     });
     
     importFileInput.addEventListener('change', importConfiguration);
     
-    // 關閉屬性面板
     closePanelBtn.addEventListener('click', closePropertiesPanel);
     
-    // 套用屬性變更
     applyPropertiesBtn.addEventListener('click', applyPropertyChanges);
     
-    // 幫助按鈕
     helpButton.addEventListener('click', showAboutDialog);
     closeAboutBtn.addEventListener('click', closeAboutDialog);
     
-    // 點擊遮罩關閉
     aboutDialog.querySelector('.about-dialog-overlay').addEventListener('click', closeAboutDialog);
 }
 
-// ===========================
-// 重置所有設定
-// ===========================
 function resetAll() {
-    // 重置網格狀態
     gridState = { ...DEFAULT_STATE };
     
-    // 更新控制項
     columnsSlider.value = DEFAULT_STATE.columns;
     columnsValue.value = DEFAULT_STATE.columns;
     rowsSlider.value = DEFAULT_STATE.rows;
@@ -316,22 +257,16 @@ function resetAll() {
     rowGapSlider.value = DEFAULT_STATE.rowGap;
     rowGapValue.value = DEFAULT_STATE.rowGap;
     
-    // 清空項目
     gridItems = [];
     itemIdCounter = 1;
     
-    // 添加預設項目
     addGridItem(1, 1, 1, 1);
     addGridItem(2, 1, 1, 1);
     addGridItem(1, 2, 1, 1);
     
-    // 更新網格
     updateGrid();
 }
 
-// ===========================
-// 清空所有項目
-// ===========================
 async function clearAllItems() {
     if (gridItems.length === 0) return;
     
@@ -343,9 +278,6 @@ async function clearAllItems() {
     }
 }
 
-// ===========================
-// 切換網格線顯示
-// ===========================
 function toggleGridLines() {
     if (showGridLines) {
         gridPreview.classList.add('show-grid-lines');
@@ -354,17 +286,12 @@ function toggleGridLines() {
     }
 }
 
-// ===========================
-// 套用模板
-// ===========================
 function applyTemplate(templateName) {
-    // 清空現有項目
     gridItems = [];
     itemIdCounter = 1;
     
     switch (templateName) {
         case 'basic':
-            // 基本 3x3 佈局
             gridState.columns = 5;
             gridState.rows = 6;
             addGridItem(1, 1, 1, 1);
@@ -379,82 +306,64 @@ function applyTemplate(templateName) {
             break;
             
         case 'header-footer':
-            // 頭部-內容-底部
             gridState.columns = 5;
             gridState.rows = 6;
-            addGridItem(1, 1, 5, 2); // Header (跨5列，2行)
-            addGridItem(1, 3, 5, 3); // Content (跨5列，3行)
-            addGridItem(1, 6, 5, 1); // Footer (跨5列，1行)
+            addGridItem(1, 1, 5, 2);
+            addGridItem(1, 3, 5, 3);
+            addGridItem(1, 6, 5, 1);
             break;
             
         case 'sidebar':
-            // 頭部-側邊欄-內容
             gridState.columns = 5;
             gridState.rows = 6;
-            addGridItem(1, 1, 5, 1); // Header
-            addGridItem(1, 2, 1, 5); // Left Sidebar (跨1列，5行)
-            addGridItem(2, 2, 4, 5); // Content (跨4列，5行)
+            addGridItem(1, 1, 5, 1);
+            addGridItem(1, 2, 1, 5);
+            addGridItem(2, 2, 4, 5);
             break;
             
         case 'holy-grail':
-            // 聖杯佈局：頭部-左側-主內容-右側-底部
             gridState.columns = 5;
             gridState.rows = 6;
-            addGridItem(1, 1, 5, 1); // Header
-            addGridItem(1, 2, 1, 4); // Left Sidebar (跨1列，4行)
-            addGridItem(2, 2, 3, 4); // Main Content (跨3列，4行)
-            addGridItem(5, 2, 1, 4); // Right Sidebar (跨1列，4行)
-            addGridItem(1, 6, 5, 1); // Footer
+            addGridItem(1, 1, 5, 1);
+            addGridItem(1, 2, 1, 4);
+            addGridItem(2, 2, 3, 4);
+            addGridItem(5, 2, 1, 4);
+            addGridItem(1, 6, 5, 1);
             break;
     }
     
-    // 更新控制項
     columnsSlider.value = gridState.columns;
     columnsValue.value = gridState.columns;
     rowsSlider.value = gridState.rows;
     rowsValue.value = gridState.rows;
     
-    // 更新網格
     updateGrid();
 }
 
-// ===========================
-// 更新網格
-// ===========================
 function updateGrid(skipAnimation = true) {
     const { columns, rows, columnGap, rowGap } = gridState;
     
-    // 調整所有項目以適應新的網格大小
     adjustItemsToGrid();
     
-    // 更新預覽區域的網格樣式
     gridPreview.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
     gridPreview.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     gridPreview.style.columnGap = `${columnGap}px`;
     gridPreview.style.rowGap = `${rowGap}px`;
     
-    // 更新CSS變數（用於網格線）
     gridPreview.style.setProperty('--grid-columns', columns);
     gridPreview.style.setProperty('--grid-rows', rows);
     
-    // 更新網格線
     toggleGridLines();
     
-    // 渲染網格項目（拖動時跳過動畫）
     renderGridItems(skipAnimation);
     
-    // 更新代碼
     generateCode();
 }
 
-// ===========================
-// 調整項目以適應網格大小
-// ===========================
 function adjustItemsToGrid() {
     const { columns, rows } = gridState;
     
     gridItems.forEach(item => {
-        // 調整列位置和大小
         if (item.colStart > columns) {
             item.colStart = columns;
         }
@@ -462,7 +371,6 @@ function adjustItemsToGrid() {
             item.colSpan = columns - item.colStart + 1;
         }
         
-        // 調整行位置和大小
         if (item.rowStart > rows) {
             item.rowStart = rows;
         }
@@ -470,22 +378,16 @@ function adjustItemsToGrid() {
             item.rowSpan = rows - item.rowStart + 1;
         }
         
-        // 確保最小大小為 1
         if (item.colSpan < 1) item.colSpan = 1;
         if (item.rowSpan < 1) item.rowSpan = 1;
     });
     
-    // 解決可能的重疊問題
     resolveOverlaps();
 }
 
-// ===========================
-// 解決重疊問題
-// ===========================
 function resolveOverlaps() {
     const { columns, rows } = gridState;
     
-    // 多次迭代以解決所有重疊
     let maxIterations = 20;
     let hasOverlap = true;
     
@@ -497,13 +399,11 @@ function resolveOverlaps() {
                 if (checkOverlap(gridItems[i], gridItems[j])) {
                     hasOverlap = true;
                     
-                    // 嘗試移動第二個項目到空位
                     const emptyPos = findEmptyPositionForItem(gridItems[j]);
                     if (emptyPos) {
                         gridItems[j].colStart = emptyPos.col;
                         gridItems[j].rowStart = emptyPos.row;
                         
-                        // 確保新位置不超出邊界
                         if (gridItems[j].colEnd > columns + 1) {
                             gridItems[j].colSpan = columns - gridItems[j].colStart + 1;
                         }
@@ -511,7 +411,6 @@ function resolveOverlaps() {
                             gridItems[j].rowSpan = rows - gridItems[j].rowStart + 1;
                         }
                     } else {
-                        // 如果找不到空位，縮小項目大小
                         if (gridItems[j].colSpan > 1) {
                             gridItems[j].colSpan--;
                         } else if (gridItems[j].rowSpan > 1) {
@@ -526,16 +425,11 @@ function resolveOverlaps() {
     }
 }
 
-// ===========================
-// 為特定項目尋找空位置
-// ===========================
 function findEmptyPositionForItem(item) {
     const { columns, rows } = gridState;
     
-    // 檢查每個可能的位置
     for (let row = 1; row <= rows; row++) {
         for (let col = 1; col <= columns; col++) {
-            // 檢查這個位置是否適合該項目
             if (col + item.colSpan - 1 <= columns && row + item.rowSpan - 1 <= rows) {
                 const tempItem = {
                     id: item.id,
@@ -547,7 +441,6 @@ function findEmptyPositionForItem(item) {
                     get rowEnd() { return this.rowStart + this.rowSpan; }
                 };
                 
-                // 檢查是否與其他項目重疊
                 const hasOverlap = gridItems.some(other => 
                     other.id !== item.id && checkOverlap(tempItem, other)
                 );
@@ -562,34 +455,24 @@ function findEmptyPositionForItem(item) {
     return null;
 }
 
-// ===========================
-// 渲染網格項目
-// ===========================
 function renderGridItems(skipAnimation = false) {
-    // 清空現有項目
     gridPreview.innerHTML = '';
     
-    // 為網格容器添加拖放事件（允許拖到空格）
     gridPreview.addEventListener('dragover', handleDragOver);
     gridPreview.addEventListener('drop', handleDrop);
     
-    // 創建每個項目
     gridItems.forEach((item, index) => {
         const element = createGridItemElement(item);
         gridPreview.appendChild(element);
         
-        // 只在初始化或添加新項目時添加進入動畫
         if (!skipAnimation) {
             setTimeout(() => {
                 element.classList.add('item-enter');
-            }, index * 50); // 錯開動畫時間
+            }, index * 50);
         }
     });
 }
 
-// ===========================
-// 創建網格項目元素
-// ===========================
 function createGridItemElement(item) {
     const element = document.createElement('div');
     element.className = 'grid-item';
@@ -597,13 +480,11 @@ function createGridItemElement(item) {
     element.textContent = item.id;
     element.draggable = true;
     
-    // 設置網格位置
     element.style.gridColumnStart = item.colStart;
     element.style.gridColumnEnd = item.colEnd;
     element.style.gridRowStart = item.rowStart;
     element.style.gridRowEnd = item.rowEnd;
     
-    // 創建刪除按鈕
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.innerHTML = '×';
@@ -613,23 +494,18 @@ function createGridItemElement(item) {
     });
     element.appendChild(deleteBtn);
     
-    // 創建調整大小手柄
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'resize-handle';
     element.appendChild(resizeHandle);
     
-    // 拖動事件
     element.addEventListener('dragstart', handleDragStart);
     element.addEventListener('dragend', handleDragEnd);
     element.addEventListener('dragover', handleDragOver);
     element.addEventListener('drop', handleDrop);
     
-    // 調整大小事件
     resizeHandle.addEventListener('mousedown', (e) => handleResizeStart(e, item));
     
-    // 點擊選中項目
     element.addEventListener('click', (e) => {
-        // 不要在拖動或調整大小時選中
         if (!draggedItem && !resizingItem) {
             selectItem(item);
         }
@@ -638,16 +514,12 @@ function createGridItemElement(item) {
     return element;
 }
 
-// ===========================
-// 拖動事件處理
-// ===========================
 function handleDragStart(e) {
     const id = parseInt(e.target.dataset.id);
     draggedItem = gridItems.find(item => item.id === id);
     e.target.classList.add('dragging');
     e.dataTransfer.effectAllowed = 'move';
     
-    // 儲存拖動開始時的偏移量
     const rect = e.target.getBoundingClientRect();
     e.dataTransfer.setData('offsetX', e.clientX - rect.left);
     e.dataTransfer.setData('offsetY', e.clientY - rect.top);
@@ -657,13 +529,11 @@ function handleDragEnd(e) {
     e.target.classList.remove('dragging');
     draggedItem = null;
     
-    // 移除占位符
     if (placeholderElement) {
         placeholderElement.remove();
         placeholderElement = null;
     }
     
-    // 移除所有拖動提示
     document.querySelectorAll('.grid-item.drag-over').forEach(el => {
         el.classList.remove('drag-over');
     });
@@ -673,25 +543,20 @@ function handleDragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     
-    // 計算當前滑鼠位置對應的網格座標
     if (draggedItem) {
         const gridRect = gridPreview.getBoundingClientRect();
         const x = e.clientX - gridRect.left;
         const y = e.clientY - gridRect.top;
         
-        // 計算網格單元格大小
         const cellWidth = gridRect.width / gridState.columns;
         const cellHeight = gridRect.height / gridState.rows;
         
-        // 計算目標網格位置
         const col = Math.floor(x / cellWidth) + 1;
         const row = Math.floor(y / cellHeight) + 1;
         
-        // 限制在網格範圍內
         const targetCol = Math.max(1, Math.min(col, gridState.columns));
         const targetRow = Math.max(1, Math.min(row, gridState.rows));
         
-        // 高亮顯示目標位置
         highlightDropTarget(targetCol, targetRow);
     }
 }
@@ -702,36 +567,29 @@ function handleDrop(e) {
     
     if (!draggedItem) return;
     
-    // 移除占位符
     if (placeholderElement) {
         placeholderElement.remove();
         placeholderElement = null;
     }
     
-    // 計算放下位置的網格座標
     const gridRect = gridPreview.getBoundingClientRect();
     const x = e.clientX - gridRect.left;
     const y = e.clientY - gridRect.top;
     
-    // 計算網格單元格大小
     const cellWidth = gridRect.width / gridState.columns;
     const cellHeight = gridRect.height / gridState.rows;
     
-    // 計算目標網格位置
     const col = Math.floor(x / cellWidth) + 1;
     const row = Math.floor(y / cellHeight) + 1;
     
-    // 限制在網格範圍內
     const targetCol = Math.max(1, Math.min(col, gridState.columns));
     const targetRow = Math.max(1, Math.min(row, gridState.rows));
     
-    // 檢查是否放在其他項目上（排除占位符）
     const targetElement = e.target.closest('.grid-item:not(.drag-placeholder)');
     if (targetElement && targetElement.dataset.id) {
         const targetId = parseInt(targetElement.dataset.id);
         const targetItem = gridItems.find(item => item.id === targetId);
         
-        // 如果放在其他項目上，交換位置
         if (targetItem && targetItem.id !== draggedItem.id) {
             swapItems(draggedItem, targetItem);
             updateGrid();
@@ -739,14 +597,10 @@ function handleDrop(e) {
         }
     }
     
-    // 否則，移動到計算出的網格位置
     moveItemToPosition(draggedItem, targetCol, targetRow);
     updateGrid();
 }
 
-// ===========================
-// 交換兩個項目
-// ===========================
 function swapItems(item1, item2) {
     const tempCol = item1.colStart;
     const tempRow = item1.rowStart;
@@ -764,45 +618,33 @@ function swapItems(item1, item2) {
     item2.rowSpan = tempRowSpan;
 }
 
-// ===========================
-// 移動項目到指定位置
-// ===========================
 function moveItemToPosition(item, targetCol, targetRow) {
-    // 確保不超出網格邊界
     const maxCol = gridState.columns - item.colSpan + 1;
     const maxRow = gridState.rows - item.rowSpan + 1;
     
     const newCol = Math.max(1, Math.min(targetCol, maxCol));
     const newRow = Math.max(1, Math.min(targetRow, maxRow));
     
-    // 檢查新位置是否有效（不重疊）
     if (isValidPosition(item, newCol, newRow, item.colSpan, item.rowSpan)) {
         item.colStart = newCol;
         item.rowStart = newRow;
     } else {
-        // 如果目標位置有重疊，尋找最近的有效位置
         const nearestPos = findNearestValidPosition(item, newCol, newRow);
         if (nearestPos) {
             item.colStart = nearestPos.col;
             item.rowStart = nearestPos.row;
         }
-        // 如果找不到有效位置，保持原位
     }
 }
 
-// ===========================
-// 尋找最近的有效位置
-// ===========================
 function findNearestValidPosition(item, targetCol, targetRow) {
     const { columns, rows } = gridState;
     let minDistance = Infinity;
     let bestPosition = null;
     
-    // 搜索範圍：以目標位置為中心的區域
     for (let row = 1; row <= rows - item.rowSpan + 1; row++) {
         for (let col = 1; col <= columns - item.colSpan + 1; col++) {
             if (isValidPosition(item, col, row, item.colSpan, item.rowSpan)) {
-                // 計算距離
                 const distance = Math.sqrt(
                     Math.pow(col - targetCol, 2) + Math.pow(row - targetRow, 2)
                 );
@@ -818,33 +660,26 @@ function findNearestValidPosition(item, targetCol, targetRow) {
     return bestPosition;
 }
 
-// ===========================
-// 高亮顯示放置目標
-// ===========================
 let placeholderElement = null;
 
 function highlightDropTarget(col, row) {
     if (!draggedItem) return;
     
-    // 移除舊的占位符
     if (placeholderElement) {
         placeholderElement.remove();
         placeholderElement = null;
     }
     
-    // 檢查目標位置是否有效
     const maxCol = gridState.columns - draggedItem.colSpan + 1;
     const maxRow = gridState.rows - draggedItem.rowSpan + 1;
     
     const targetCol = Math.max(1, Math.min(col, maxCol));
     const targetRow = Math.max(1, Math.min(row, maxRow));
     
-    // 檢查是否會重疊
     if (!isValidPosition(draggedItem, targetCol, targetRow, draggedItem.colSpan, draggedItem.rowSpan)) {
-        return; // 無效位置，不顯示占位符
+        return;
     }
     
-    // 創建占位符
     placeholderElement = document.createElement('div');
     placeholderElement.className = 'grid-item drag-placeholder';
     placeholderElement.style.gridColumnStart = targetCol;
@@ -856,9 +691,6 @@ function highlightDropTarget(col, row) {
     gridPreview.appendChild(placeholderElement);
 }
 
-// ===========================
-// 檢查項目是否重疊
-// ===========================
 function checkOverlap(item1, item2) {
     return !(item1.colEnd <= item2.colStart || 
              item1.colStart >= item2.colEnd ||
@@ -866,16 +698,11 @@ function checkOverlap(item1, item2) {
              item1.rowStart >= item2.rowEnd);
 }
 
-// ===========================
-// 檢查位置是否有效（不重疊且不超出邊界）
-// ===========================
 function isValidPosition(item, newColStart, newRowStart, newColSpan, newRowSpan) {
-    // 檢查是否超出網格邊界
     if (newColStart < 1 || newRowStart < 1) return false;
     if (newColStart + newColSpan - 1 > gridState.columns) return false;
     if (newRowStart + newRowSpan - 1 > gridState.rows) return false;
     
-    // 創建臨時項目來檢查重疊
     const tempItem = {
         colStart: newColStart,
         rowStart: newRowStart,
@@ -885,7 +712,6 @@ function isValidPosition(item, newColStart, newRowStart, newColSpan, newRowSpan)
         get rowEnd() { return this.rowStart + this.rowSpan; }
     };
     
-    // 檢查與其他項目是否重疊
     for (let other of gridItems) {
         if (other.id !== item.id && checkOverlap(tempItem, other)) {
             return false;
@@ -895,9 +721,6 @@ function isValidPosition(item, newColStart, newRowStart, newColSpan, newRowSpan)
     return true;
 }
 
-// ===========================
-// 調整大小事件處理
-// ===========================
 function handleResizeStart(e, item) {
     e.preventDefault();
     e.stopPropagation();
@@ -921,21 +744,18 @@ function handleResizeMove(e) {
     const deltaX = e.clientX - resizeStartX;
     const deltaY = e.clientY - resizeStartY;
     
-    // 估算列和行的大小變化
-    const colChange = Math.round(deltaX / 100); // 粗略估計
+    const colChange = Math.round(deltaX / 100);
     const rowChange = Math.round(deltaY / 80);
     
     const newColSpan = Math.max(1, resizeStartColSpan + colChange);
     const newRowSpan = Math.max(1, resizeStartRowSpan + rowChange);
     
-    // 確保不超出網格邊界
     const maxColSpan = gridState.columns - resizingItem.colStart + 1;
     const maxRowSpan = gridState.rows - resizingItem.rowStart + 1;
     
     const finalColSpan = Math.min(newColSpan, maxColSpan);
     const finalRowSpan = Math.min(newRowSpan, maxRowSpan);
     
-    // 檢查新大小是否會造成重疊
     if (isValidPosition(resizingItem, resizingItem.colStart, resizingItem.rowStart, finalColSpan, finalRowSpan)) {
         resizingItem.colSpan = finalColSpan;
         resizingItem.rowSpan = finalRowSpan;
@@ -956,17 +776,11 @@ function handleResizeEnd() {
     document.removeEventListener('mouseup', handleResizeEnd);
 }
 
-// ===========================
-// 生成代碼
-// ===========================
 function generateCode() {
     generateHTML();
     generateCSS();
 }
 
-// ===========================
-// 生成 HTML 代碼
-// ===========================
 function generateHTML() {
     let html = '<div class="grid-container">\n';
     
@@ -979,9 +793,6 @@ function generateHTML() {
     htmlCode.innerHTML = highlightHTML(html);
 }
 
-// ===========================
-// 生成 CSS 代碼
-// ===========================
 function generateCSS() {
     const { columns, rows, columnGap, rowGap } = gridState;
     const css = generateRegularCSS(columns, rows, columnGap, rowGap);
@@ -1027,9 +838,6 @@ ${gapProperty}
     return css;
 }
 
-// ===========================
-// HTML 語法高亮
-// ===========================
 function highlightHTML(html) {
     return html
         .replace(/</g, '&lt;')
@@ -1039,18 +847,12 @@ function highlightHTML(html) {
         .replace(/="([^"]+)"/g, '="<span class="value">$1</span>"');
 }
 
-// ===========================
-// CSS 語法高亮
-// ===========================
 function highlightCSS(css) {
     return css
         .replace(/([a-z-]+)(?=:)/g, '<span class="property">$1</span>')
         .replace(/:\s*([^;]+)/g, ': <span class="value">$1</span>');
 }
 
-// ===========================
-// 複製到剪貼簿
-// ===========================
 function copyToClipboard(type) {
     const codeElement = type === 'html' ? htmlCode : cssCode;
     const button = type === 'html' ? copyHtmlBtn : copyCssBtn;
@@ -1058,7 +860,6 @@ function copyToClipboard(type) {
     const code = codeElement.textContent;
     
     navigator.clipboard.writeText(code).then(() => {
-        // 顯示成功反饋
         const originalText = buttonText.textContent;
         buttonText.textContent = '已複製！';
         button.classList.add('copied');
@@ -1073,9 +874,6 @@ function copyToClipboard(type) {
     });
 }
 
-// ===========================
-// 降級複製方案
-// ===========================
 function fallbackCopyToClipboard(text, button, buttonText) {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -1102,9 +900,6 @@ function fallbackCopyToClipboard(text, button, buttonText) {
     document.body.removeChild(textArea);
 }
 
-// ===========================
-// 匯出配置
-// ===========================
 function exportConfiguration() {
     const config = {
         version: '1.0',
@@ -1135,9 +930,6 @@ function exportConfiguration() {
     showNotification('配置已成功匯出', 'success');
 }
 
-// ===========================
-// 匯入配置
-// ===========================
 function importConfiguration(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -1147,15 +939,12 @@ function importConfiguration(e) {
         try {
             const config = JSON.parse(event.target.result);
             
-            // 驗證配置格式
             if (!config.gridState || !config.gridItems) {
                 throw new Error('無效的配置文件格式');
             }
             
-            // 載入網格狀態
             gridState = { ...config.gridState };
             
-            // 更新控制項
             columnsSlider.value = gridState.columns;
             columnsValue.value = gridState.columns;
             rowsSlider.value = gridState.rows;
@@ -1165,7 +954,6 @@ function importConfiguration(e) {
             rowGapSlider.value = gridState.rowGap;
             rowGapValue.value = gridState.rowGap;
             
-            // 載入網格項目
             gridItems = [];
             config.gridItems.forEach(itemData => {
                 const item = new GridItem(
@@ -1178,12 +966,10 @@ function importConfiguration(e) {
                 gridItems.push(item);
             });
             
-            // 更新計數器
             if (config.itemIdCounter) {
                 itemIdCounter = config.itemIdCounter;
             }
             
-            // 更新網格
             updateGrid();
             
             showNotification('配置已成功匯入！', 'success');
@@ -1195,34 +981,24 @@ function importConfiguration(e) {
     
     reader.readAsText(file);
     
-    // 清空 input，允許再次選擇同一個文件
     e.target.value = '';
 }
 
-// ===========================
-// 選中項目
-// ===========================
 function selectItem(item) {
     selectedItem = item;
     
-    // 移除所有項目的選中狀態
     document.querySelectorAll('.grid-item').forEach(el => {
         el.classList.remove('selected');
     });
     
-    // 添加選中狀態
     const element = document.querySelector(`[data-id="${item.id}"]`);
     if (element) {
         element.classList.add('selected');
     }
     
-    // 顯示屬性面板
     showPropertiesPanel(item);
 }
 
-// ===========================
-// 顯示屬性面板
-// ===========================
 function showPropertiesPanel(item) {
     selectedItemIdSpan.textContent = `#${item.id}`;
     propColStart.value = item.colStart;
@@ -1230,7 +1006,6 @@ function showPropertiesPanel(item) {
     propRowStart.value = item.rowStart;
     propRowEnd.value = item.rowEnd;
     
-    // 設定輸入框的最大值
     propColStart.max = gridState.columns;
     propColEnd.max = gridState.columns + 1;
     propRowStart.max = gridState.rows;
@@ -1239,22 +1014,15 @@ function showPropertiesPanel(item) {
     itemPropertiesPanel.style.display = 'block';
 }
 
-// ===========================
-// 關閉屬性面板
-// ===========================
 function closePropertiesPanel() {
     itemPropertiesPanel.style.display = 'none';
     selectedItem = null;
     
-    // 移除所有選中狀態
     document.querySelectorAll('.grid-item').forEach(el => {
         el.classList.remove('selected');
     });
 }
 
-// ===========================
-// 套用屬性變更
-// ===========================
 function applyPropertyChanges() {
     if (!selectedItem) return;
     
@@ -1263,7 +1031,6 @@ function applyPropertyChanges() {
     const rowStart = parseInt(propRowStart.value);
     const rowEnd = parseInt(propRowEnd.value);
     
-    // 驗證輸入
     if (colStart < 1 || colStart > gridState.columns) {
         showNotification('列起始值無效', 'error');
         return;
@@ -1284,11 +1051,9 @@ function applyPropertyChanges() {
         return;
     }
     
-    // 計算新的大小
     const newColSpan = colEnd - colStart;
     const newRowSpan = rowEnd - rowStart;
     
-    // 檢查新位置是否有效（不與其他項目重疊）
     if (isValidPosition(selectedItem, colStart, rowStart, newColSpan, newRowSpan)) {
         selectedItem.colStart = colStart;
         selectedItem.rowStart = rowStart;
@@ -1297,7 +1062,6 @@ function applyPropertyChanges() {
         
         updateGrid();
         
-        // 重新選中項目以更新屬性面板
         selectItem(selectedItem);
         showNotification('項目屬性已更新', 'success');
     } else {
@@ -1305,16 +1069,12 @@ function applyPropertyChanges() {
     }
 }
 
-// ===========================
-// 通知系統
-// ===========================
 const notificationContainer = document.getElementById('notification-container');
 
 function showNotification(message, type = 'info', duration = 3000) {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     
-    // 圖標
     const icons = {
         success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>',
         error: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
@@ -1340,14 +1100,12 @@ function showNotification(message, type = 'info', duration = 3000) {
     
     notificationContainer.appendChild(notification);
     
-    // 關閉按鈕
     const closeBtn = notification.querySelector('.notification-close');
     closeBtn.addEventListener('click', () => {
         notification.style.animation = 'notificationSlideIn 200ms ease reverse';
         setTimeout(() => notification.remove(), 200);
     });
     
-    // 自動移除
     if (duration > 0) {
         setTimeout(() => {
             if (notification.parentElement) {
@@ -1358,9 +1116,6 @@ function showNotification(message, type = 'info', duration = 3000) {
     }
 }
 
-// ===========================
-// 確認對話框
-// ===========================
 const confirmDialog = document.getElementById('confirm-dialog');
 const confirmTitle = document.getElementById('confirm-title');
 const confirmMessage = document.getElementById('confirm-message');
@@ -1395,9 +1150,6 @@ function showConfirmDialog(message, title = '確認') {
     });
 }
 
-// ===========================
-// 顯示載入動畫
-// ===========================
 function showLoadingOverlay(message = '載入中...') {
     const overlay = document.createElement('div');
     overlay.className = 'loading-overlay';
@@ -1409,18 +1161,12 @@ function showLoadingOverlay(message = '載入中...') {
     return overlay;
 }
 
-// ===========================
-// 隱藏載入動畫
-// ===========================
 function hideLoadingOverlay(overlay) {
     if (overlay && overlay.parentNode) {
         overlay.parentNode.removeChild(overlay);
     }
 }
 
-// ===========================
-// 添加項目動畫
-// ===========================
 function addGridItemWithAnimation(colStart, colEnd, rowStart, rowEnd) {
     const loadingOverlay = showLoadingOverlay('添加項目中...');
     
@@ -1430,9 +1176,6 @@ function addGridItemWithAnimation(colStart, colEnd, rowStart, rowEnd) {
     }, 300);
 }
 
-// ===========================
-// 移除項目動畫
-// ===========================
 function removeGridItemWithAnimation(itemId) {
     const item = gridItems.find(item => item.id === itemId);
     if (!item) return;
@@ -1448,21 +1191,12 @@ function removeGridItemWithAnimation(itemId) {
     }
 }
 
-// ===========================
-// 顯示關於對話框
-// ===========================
 function showAboutDialog() {
     aboutDialog.style.display = 'flex';
 }
 
-// ===========================
-// 關閉關於對話框
-// ===========================
 function closeAboutDialog() {
     aboutDialog.style.display = 'none';
 }
 
-// ===========================
-// 啟動應用
-// ===========================
 init();

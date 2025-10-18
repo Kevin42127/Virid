@@ -6,7 +6,6 @@
     <title>Virid</title>
     <meta name="description" content="Virid - Visual CSS Grid Layout Generator. Create and customize your CSS Grid layouts with ease.">
     
-    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="public/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png">
@@ -19,7 +18,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- 標題 -->
         <header class="header">
             <div class="header-content">
                 <img src="public/logo - 1.png" alt="Virid Logo" class="logo" oncontextmenu="return false;" onclick="return false;" ondragstart="return false;">
@@ -29,9 +27,7 @@
             </div>
         </header>
 
-        <!-- 主要內容區域 -->
         <div class="main-content">
-            <!-- 左側控制面板 -->
             <aside class="control-panel">
                 <div class="card">
                     <div class="panel-header">
@@ -56,7 +52,6 @@
                         </div>
                     </div>
                     
-                    <!-- 列數控制 -->
                     <div class="control-group">
                         <label for="columns">列數 (Columns)</label>
                         <div class="input-group">
@@ -65,7 +60,6 @@
                         </div>
                     </div>
 
-                    <!-- 行數控制 -->
                     <div class="control-group">
                         <label for="rows">行數 (Rows)</label>
                         <div class="input-group">
@@ -74,7 +68,6 @@
                         </div>
                     </div>
 
-                    <!-- 列間距控制 -->
                     <div class="control-group">
                         <label for="column-gap">列間距 (Column Gap)</label>
                         <div class="input-group">
@@ -86,7 +79,6 @@
                         </div>
                     </div>
 
-                    <!-- 行間距控制 -->
                     <div class="control-group">
                         <label for="row-gap">行間距 (Row Gap)</label>
                         <div class="input-group">
@@ -98,7 +90,6 @@
                         </div>
                     </div>
 
-                    <!-- 網格線顯示開關 -->
                     <div class="control-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="show-grid-lines" checked>
@@ -107,7 +98,6 @@
                     </div>
                 </div>
 
-                <!-- 預設模板 -->
                 <div class="card template-card">
                     <h2>快速模板</h2>
                     <div class="template-grid">
@@ -130,7 +120,6 @@
                     </div>
                 </div>
 
-                <!-- 匯出/匯入 -->
                 <div class="card">
                     <h2>配置管理</h2>
                     <div class="export-import-buttons">
@@ -155,7 +144,6 @@
                 </div>
             </aside>
 
-            <!-- 右側預覽區域 -->
             <main class="preview-section">
                 <div class="card preview-card">
                     <div class="preview-header">
@@ -170,11 +158,9 @@
                     </div>
                     <div class="grid-preview-container">
                         <div id="grid-preview" class="grid-preview">
-                            <!-- 網格項目將由 JavaScript 動態生成 -->
                         </div>
                     </div>
                     
-                    <!-- 項目屬性編輯面板 -->
                     <div id="item-properties-panel" class="item-properties-panel" style="display: none;">
                         <div class="panel-title">
                             <h3>項目屬性 <span id="selected-item-id"></span></h3>
@@ -204,9 +190,7 @@
             </main>
         </div>
 
-                <!-- 代碼顯示區域 -->
         <section class="code-section">
-            <!-- HTML 代碼 -->
             <div class="card code-card">
                 <div class="code-header">
                     <h2>生成的 HTML 代碼</h2>
@@ -223,7 +207,6 @@
                 </div>
             </div>
 
-            <!-- CSS 代碼 -->
             <div class="card code-card">
                 <div class="code-header">
                     <h2>生成的 CSS 代碼</h2>
@@ -242,10 +225,8 @@
         </section>
     </div>
 
-    <!-- 通知系統 -->
     <div id="notification-container" class="notification-container"></div>
 
-    <!-- 確認對話框 -->
     <div id="confirm-dialog" class="confirm-dialog" style="display: none;">
         <div class="confirm-dialog-overlay"></div>
         <div class="confirm-dialog-content">
@@ -258,7 +239,6 @@
         </div>
     </div>
 
-    <!-- 浮動幫助按鈕 -->
     <button id="help-button" class="help-button" title="關於我們">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
@@ -267,7 +247,6 @@
         </svg>
     </button>
 
-    <!-- 關於我們對話框 -->
     <div id="about-dialog" class="about-dialog" style="display: none;">
         <div class="about-dialog-overlay"></div>
         <div class="about-dialog-content">
