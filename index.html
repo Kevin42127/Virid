@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virid</title>
+    <meta name="description" content="Virid - Visual CSS Grid Layout Generator. Create and customize your CSS Grid layouts with ease.">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="public/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="public/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="public/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="public/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="public/android-chrome-512x512.png">
+    <link rel="manifest" href="public/site.webmanifest">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 標題 -->
+        <header class="header">
+            <div class="header-content">
+                <img src="public/logo - 1.png" alt="Virid Logo" class="logo" oncontextmenu="return false;" onclick="return false;" ondragstart="return false;">
+                <div class="header-text">
+                    <h1>Virid</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要內容區域 -->
+        <div class="main-content">
+            <!-- 左側控制面板 -->
+            <aside class="control-panel">
+                <div class="card">
+                    <div class="panel-header">
+                        <h2>網格設定</h2>
+                        <div class="action-buttons">
+                            <button id="reset-btn" class="action-button" title="重置所有設定">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                    <path d="M3 21v-5h5"></path>
+                                </svg>
+                                重置
+                            </button>
+                            <button id="clear-btn" class="action-button" title="清空所有項目">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                清空
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 列數控制 -->
+                    <div class="control-group">
+                        <label for="columns">列數 (Columns)</label>
+                        <div class="input-group">
+                            <input type="range" id="columns" min="1" max="12" value="5" class="slider">
+                            <input type="number" id="columns-value" min="1" max="12" value="5" class="number-input">
+                        </div>
+                    </div>
+
+                    <!-- 行數控制 -->
+                    <div class="control-group">
+                        <label for="rows">行數 (Rows)</label>
+                        <div class="input-group">
+                            <input type="range" id="rows" min="1" max="12" value="6" class="slider">
+                            <input type="number" id="rows-value" min="1" max="12" value="6" class="number-input">
+                        </div>
+                    </div>
+
+                    <!-- 列間距控制 -->
+                    <div class="control-group">
+                        <label for="column-gap">列間距 (Column Gap)</label>
+                        <div class="input-group">
+                            <input type="range" id="column-gap" min="0" max="50" value="6" class="slider">
+                            <div class="number-input-wrapper">
+                                <input type="number" id="column-gap-value" min="0" max="50" value="6" class="number-input">
+                                <span class="unit">px</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 行間距控制 -->
+                    <div class="control-group">
+                        <label for="row-gap">行間距 (Row Gap)</label>
+                        <div class="input-group">
+                            <input type="range" id="row-gap" min="0" max="50" value="6" class="slider">
+                            <div class="number-input-wrapper">
+                                <input type="number" id="row-gap-value" min="0" max="50" value="6" class="number-input">
+                                <span class="unit">px</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 網格線顯示開關 -->
+                    <div class="control-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="show-grid-lines" checked>
+                            <span>顯示網格線</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 預設模板 -->
+                <div class="card template-card">
+                    <h2>快速模板</h2>
+                    <div class="template-grid">
+                        <button class="template-button" data-template="basic">
+                            <div class="template-preview template-basic"></div>
+                            <span>基本佈局</span>
+                        </button>
+                        <button class="template-button" data-template="header-footer">
+                            <div class="template-preview template-header-footer"></div>
+                            <span>頭部底部</span>
+                        </button>
+                        <button class="template-button" data-template="sidebar">
+                            <div class="template-preview template-sidebar"></div>
+                            <span>側邊欄</span>
+                        </button>
+                        <button class="template-button" data-template="holy-grail">
+                            <div class="template-preview template-holy-grail"></div>
+                            <span>聖杯佈局</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 匯出/匯入 -->
+                <div class="card">
+                    <h2>配置管理</h2>
+                    <div class="export-import-buttons">
+                        <button id="export-btn" class="action-button full-width">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            匯出配置
+                        </button>
+                        <button id="import-btn" class="action-button full-width">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            匯入配置
+                        </button>
+                        <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 右側預覽區域 -->
+            <main class="preview-section">
+                <div class="card preview-card">
+                    <div class="preview-header">
+                        <h2>即時預覽</h2>
+                        <button id="add-item-btn" class="add-item-button" title="添加網格項目">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            添加項目
+                        </button>
+                    </div>
+                    <div class="grid-preview-container">
+                        <div id="grid-preview" class="grid-preview">
+                            <!-- 網格項目將由 JavaScript 動態生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 項目屬性編輯面板 -->
+                    <div id="item-properties-panel" class="item-properties-panel" style="display: none;">
+                        <div class="panel-title">
+                            <h3>項目屬性 <span id="selected-item-id"></span></h3>
+                            <button id="close-panel-btn" class="close-panel-btn">×</button>
+                        </div>
+                        <div class="property-controls">
+                            <div class="property-row">
+                                <label>列起始 (Column Start)</label>
+                                <input type="number" id="prop-col-start" min="1" class="property-input">
+                            </div>
+                            <div class="property-row">
+                                <label>列結束 (Column End)</label>
+                                <input type="number" id="prop-col-end" min="2" class="property-input">
+                            </div>
+                            <div class="property-row">
+                                <label>行起始 (Row Start)</label>
+                                <input type="number" id="prop-row-start" min="1" class="property-input">
+                            </div>
+                            <div class="property-row">
+                                <label>行結束 (Row End)</label>
+                                <input type="number" id="prop-row-end" min="2" class="property-input">
+                            </div>
+                            <button id="apply-properties-btn" class="apply-properties-btn">套用變更</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+                <!-- 代碼顯示區域 -->
+        <section class="code-section">
+            <!-- HTML 代碼 -->
+            <div class="card code-card">
+                <div class="code-header">
+                    <h2>生成的 HTML 代碼</h2>
+                    <button id="copy-html-btn" class="copy-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span class="copy-text">複製 HTML</span>
+                    </button>
+                </div>
+                <div class="code-block">
+                    <pre><code id="html-code"></code></pre>
+                </div>
+            </div>
+
+            <!-- CSS 代碼 -->
+            <div class="card code-card">
+                <div class="code-header">
+                    <h2>生成的 CSS 代碼</h2>
+                    <button id="copy-css-btn" class="copy-button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span class="copy-text">複製 CSS</span>
+                    </button>
+                </div>
+                <div class="code-block">
+                    <pre><code id="css-code"></code></pre>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 通知系統 -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- 確認對話框 -->
+    <div id="confirm-dialog" class="confirm-dialog" style="display: none;">
+        <div class="confirm-dialog-overlay"></div>
+        <div class="confirm-dialog-content">
+            <h3 id="confirm-title">確認</h3>
+            <p id="confirm-message"></p>
+            <div class="confirm-dialog-buttons">
+                <button id="confirm-cancel-btn" class="dialog-button dialog-button-cancel">取消</button>
+                <button id="confirm-ok-btn" class="dialog-button dialog-button-ok">確定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮動幫助按鈕 -->
+    <button id="help-button" class="help-button" title="關於我們">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <circle cx="12" cy="17" r="0.5" fill="currentColor"></circle>
+        </svg>
+    </button>
+
+    <!-- 關於我們對話框 -->
+    <div id="about-dialog" class="about-dialog" style="display: none;">
+        <div class="about-dialog-overlay"></div>
+        <div class="about-dialog-content">
+            <button class="close-about-btn" id="close-about-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <h2>關於 Virid</h2>
+            <div class="about-content">
+                <div class="about-logo">
+                    <img src="public/logo - 1.png" alt="Virid Logo" oncontextmenu="return false;" onclick="return false;" ondragstart="return false;">
+                </div>
+                <h3>CSS Grid 產生器</h3>
+                <p class="version">Version 1.0.0</p>
+                <p class="description">
+                    Virid 是一個視覺化的 CSS Grid 佈局產生器，<br>讓您輕鬆創建和自定義網格佈局。
+                </p>
+                <div class="features">
+                    <h4>主要功能</h4>
+                    <ul>
+                        <li>✨ 視覺化拖放編輯</li>
+                        <li>🎨 即時預覽效果</li>
+                        <li>📝 自動生成代碼</li>
+                        <li>🎯 內建快速模板</li>
+                        <li>💾 配置匯入/匯出</li>
+                    </ul>
+                </div>
+                <div class="contact">
+                    <p>© 2025 Virid. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
