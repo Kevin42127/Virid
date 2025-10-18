@@ -135,6 +135,7 @@ function findEmptyPosition() {
 
 function bindEventListeners() {
     columnsSlider.addEventListener('input', (e) => {
+        if (draggedItem) return;
         const value = parseInt(e.target.value);
         columnsValue.value = value;
         gridState.columns = value;
@@ -152,6 +153,7 @@ function bindEventListeners() {
     });
     
     rowsSlider.addEventListener('input', (e) => {
+        if (draggedItem) return;
         const value = parseInt(e.target.value);
         rowsValue.value = value;
         gridState.rows = value;
@@ -169,6 +171,7 @@ function bindEventListeners() {
     });
     
     columnGapSlider.addEventListener('input', (e) => {
+        if (draggedItem) return;
         const value = parseInt(e.target.value);
         columnGapValue.value = value;
         gridState.columnGap = value;
@@ -186,6 +189,7 @@ function bindEventListeners() {
     });
     
     rowGapSlider.addEventListener('input', (e) => {
+        if (draggedItem) return;
         const value = parseInt(e.target.value);
         rowGapValue.value = value;
         gridState.rowGap = value;
@@ -500,10 +504,11 @@ function createGridItemElement(item) {
     
     element.addEventListener('dragstart', handleDragStart);
     element.addEventListener('dragend', handleDragEnd);
-    element.addEventListener('dragover', handleDragOver);
-    element.addEventListener('drop', handleDrop);
     
-    resizeHandle.addEventListener('mousedown', (e) => handleResizeStart(e, item));
+    resizeHandle.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        handleResizeStart(e, item);
+    });
     
     element.addEventListener('click', (e) => {
         if (!draggedItem && !resizingItem) {
@@ -515,6 +520,7 @@ function createGridItemElement(item) {
 }
 
 function handleDragStart(e) {
+    e.stopPropagation();
     const id = parseInt(e.target.dataset.id);
     draggedItem = gridItems.find(item => item.id === id);
     e.target.classList.add('dragging');
@@ -526,8 +532,8 @@ function handleDragStart(e) {
 }
 
 function handleDragEnd(e) {
+    e.stopPropagation();
     e.target.classList.remove('dragging');
-    draggedItem = null;
     
     if (placeholderElement) {
         placeholderElement.remove();
@@ -537,6 +543,10 @@ function handleDragEnd(e) {
     document.querySelectorAll('.grid-item.drag-over').forEach(el => {
         el.classList.remove('drag-over');
     });
+    
+    setTimeout(() => {
+        draggedItem = null;
+    }, 100);
 }
 
 function handleDragOver(e) {
